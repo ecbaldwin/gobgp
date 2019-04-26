@@ -239,24 +239,24 @@ func main() {
 				if c == nil {
 					c = newConfig
 					if err := bgpServer.StartBgp(context.Background(), &api.StartBgpRequest{
-						Global: config.NewGlobalFromConfigStruct(&c.Global),
+						Global: config.NewGlobalFromConfigStruct(&newConfig.Global),
 					}); err != nil {
 						log.Fatalf("failed to set global config: %s", err)
 					}
 
 					if newConfig.Zebra.Config.Enabled {
-						tps := c.Zebra.Config.RedistributeRouteTypeList
+						tps := newConfig.Zebra.Config.RedistributeRouteTypeList
 						l := make([]string, 0, len(tps))
 						for _, t := range tps {
 							l = append(l, string(t))
 						}
 						if err := bgpServer.EnableZebra(context.Background(), &api.EnableZebraRequest{
-							Url:                  c.Zebra.Config.Url,
+							Url:                  newConfig.Zebra.Config.Url,
 							RouteTypes:           l,
-							Version:              uint32(c.Zebra.Config.Version),
-							NexthopTriggerEnable: c.Zebra.Config.NexthopTriggerEnable,
-							NexthopTriggerDelay:  uint32(c.Zebra.Config.NexthopTriggerDelay),
-							MplsLabelRangeSize:   uint32(c.Zebra.Config.MplsLabelRangeSize),
+							Version:              uint32(newConfig.Zebra.Config.Version),
+							NexthopTriggerEnable: newConfig.Zebra.Config.NexthopTriggerEnable,
+							NexthopTriggerDelay:  uint32(newConfig.Zebra.Config.NexthopTriggerDelay),
+							MplsLabelRangeSize:   uint32(newConfig.Zebra.Config.MplsLabelRangeSize),
 						}); err != nil {
 							log.Fatalf("failed to set zebra config: %s", err)
 						}
